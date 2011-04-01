@@ -23,7 +23,7 @@ class RuleAdmin(admin.ModelAdmin):
                                            }
                  )
                  ('Rule-Type Specific Fields', {
-                                            'fields': ['values', 'regex', ('condition_rule', 'requirement_rule')],
+                                            'fields': ['values', 'regex', 'condition_rule', 'requirement_rule'],
                                             'description': 'The following fields are required for rules of some specific type'}
                  )
                 ]
