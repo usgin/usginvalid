@@ -25,12 +25,14 @@ class Rule(models.Model):
     # Remaining fields are optional, but may be required by clean method depending on type
     regex = models.CharField(max_length=2000, blank=True,
                              help_text='Matches Regular Expression Rule Only: Write the regular expression that should be matched.')
-    values = models.ForeignKey('ValidValueSet', blank=True, null=True,
+    values = models.ForeignKey('ValidValuesSet', blank=True, null=True,
                                help_text='Value is Valid Rules Only: Select or create a set of valid values.') 
     condition_rule = models.ForeignKey('Rule', blank=True, null=True,
-                                       help_text='Conditional Rules Only: This is the prerequisite. If this rule validates, then the requirement must also validate. Should this rule fail to validate, the document does not fail the Conditional Rule.')
+                                       help_text='Conditional Rules Only: This is the prerequisite. If this rule validates, then the requirement must also validate. Should this rule fail to validate, the document does not fail the Conditional Rule.',
+                                       related_name='condition')
     requirement_rule = models.ForeignKey('Rule', blank=True, null=True,
-                                         help_text='Conditional Rules Only: This rule must be valid if the condition rule is valid.')
+                                         help_text='Conditional Rules Only: This rule must be valid if the condition rule is valid.',
+                                         related_name='requirement')
     
     def __unicode__(self):
         return self.name
@@ -99,7 +101,7 @@ class ValidValuesSet(models.Model):
     def values_list(self):
         return self.validvalue_set.all().values('value')
         
-class ValidValues(models.Model):
+class ValidValue(models.Model):
     value = models.CharField(max_length=255)
     set = models.ForeignKey('ValidValuesSet')
     
