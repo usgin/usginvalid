@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 class RuleSet(models.Model):
     name = models.CharField(max_length=255)
     purpose = models.CharField(max_length=255)
+    rules = models.ManyToManyField('Rule')
     
     def __unicode__(self):
         return self.name
