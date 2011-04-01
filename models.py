@@ -41,7 +41,7 @@ class Rule(models.Model):
     def clean(self):
         # Make sure that only appropriate fields are populated depending on the type of rule
         if self.type == 'ExistsRule':
-            if len(self.xpath_set) != 1:
+            if len(self.xpath_set.all()) != 1:
                 raise ValidationError('Exists Rules must have exactly one XPath')
             if self.regex != '':
                 raise ValidationError('Exists Rules do not use regular expressions')
@@ -50,7 +50,7 @@ class Rule(models.Model):
             if self.values != None:
                 raise ValidationError('Exists Rules do not use a list of valid values')
         if self.type == 'ValueInListRule':
-            if len(self.xpath_set) != 1:
+            if len(self.xpath_set.all()) != 1:
                 raise ValidationError('Value is Valid Rules must have exactly one XPath')
             if self.regex != '':
                 raise ValidationError('Value is Valid Rules do not use regular expressions')
@@ -59,7 +59,7 @@ class Rule(models.Model):
             if self.values == None:
                 raise ValidationError('Value is Valid Rules require a list of valid values')
         if self.type == 'AnyOfRule' or self.type == 'OneOfRule':
-            if len(self.xpath_set) < 2:
+            if len(self.xpath_set.all()) < 2:
                 raise ValidationError('Any of and One of Rules must have at least two XPaths')
             if self.regex != '':
                 raise ValidationError('Any of and One of Rules do not use regular expressions')
@@ -68,7 +68,7 @@ class Rule(models.Model):
             if self.values != None:
                 raise ValidationError('Any of and One of Rules do not use a list of valid values')
         if self.type == 'ContentMatchesExpressionRule':
-            if len(self.xpath_set) != 1:
+            if len(self.xpath_set.all()) != 1:
                 raise ValidationError('Value Matches Regular Expression Rules must have exactly one XPath')
             if self.regex == '':
                 raise ValidationError('Value Matches Regular Expression Rules require a regular expression')
@@ -77,7 +77,7 @@ class Rule(models.Model):
             if self.values != None:
                 raise ValidationError('Value Matches Regular Expression Rules do not use a list of valid values')
         if self.type == 'ConditionalRule':
-            if len(self.xpath_set) != 0:
+            if len(self.xpath_set.all()) != 0:
                 raise ValidationError('Conditional Rules do not use a single XPath')
             if self.regex != '':
                 raise ValidationError('Conditional Rules do no use regular expressions')
