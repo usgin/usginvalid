@@ -11,6 +11,8 @@ class ValidValueInline(admin.TabularInline):
     model = ValidValue
 
 class ValidValueSetAdmin(admin.ModelAdmin):
+    list_display = ('name', 'values_preview')
+    
     inlines = [ValidValueInline]
         
 class RuleAdminForm(forms.ModelForm):

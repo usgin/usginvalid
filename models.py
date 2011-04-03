@@ -93,8 +93,17 @@ class ValidValuesSet(models.Model):
     
     def values_list(self):
         return self.validvalue_set.all().values_list('value', flat=True)
-        
+    
+    def values_preview(self):
+        list = self.values_list()
+        result = ', '.join(['%s' % value for value in list])
+        if len(result) > 28: result = result[:25] + '...'
+        return result
+             
 class ValidValue(models.Model):
+    class Meta:
+        ordering = ['value']
+        
     value = models.CharField(max_length=255)
     set = models.ForeignKey('ValidValuesSet')
     
