@@ -40,45 +40,37 @@ class Rule(models.Model):
     
     def clean(self):
         # Make sure that only appropriate fields are populated depending on the type of rule
+        # Model.clean does not yet have any information about xpath_set, so that validataion must
+        #  be done through validation of the submitted form, not the rule itself. See RuleAdminForm in admin.py.
         if self.type == 'ExistsRule':
-            if len(self.xpath_set.all()) != 1:
-                raise ValidationError('Exists Rules must have exactly one XPath. Currently has ' + str(len(self.xpath_set.all())))
             if self.regex != '':
                 raise ValidationError('Exists Rules do not use regular expressions')
-            if self.condition_rule != None or self.requirement != None:
+            if not (self.condition_rule == None or self.requirement == None):
                 raise ValidationError('Exists Rules do not use condition and requirement rules')
             if self.values != None:
                 raise ValidationError('Exists Rules do not use a list of valid values')
         if self.type == 'ValueInListRule':
-            if len(self.xpath_set.all()) != 1:
-                raise ValidationError('Value is Valid Rules must have exactly one XPath. Currently has ' + str(len(self.xpath_set.all())))
             if self.regex != '':
                 raise ValidationError('Value is Valid Rules do not use regular expressions')
-            if self.condition_rule != None or self.requirement != None:
+            if not (self.condition_rule == None or self.requirement == None):
                 raise ValidationError('Value is Valid Rules do not use condition and requirement rules')
             if self.values == None:
                 raise ValidationError('Value is Valid Rules require a list of valid values')
         if self.type == 'AnyOfRule' or self.type == 'OneOfRule':
-            if len(self.xpath_set.all()) < 2:
-                raise ValidationError('Any of and One of Rules must have at least two XPaths. Currently has ' + str(len(self.xpath_set.all())))
             if self.regex != '':
                 raise ValidationError('Any of and One of Rules do not use regular expressions')
-            if self.condition_rule != None or self.requirement != None:
+            if not (self.condition_rule == None or self.requirement == None):
                 raise ValidationError('Any of and One of Rules do not use condition and requirement rules')
             if self.values != None:
                 raise ValidationError('Any of and One of Rules do not use a list of valid values')
         if self.type == 'ContentMatchesExpressionRule':
-            if len(self.xpath_set.all()) != 1:
-                raise ValidationError('Value Matches Regular Expression Rules must have exactly one XPath. Currently has ' + str(len(self.xpath_set.all())))
             if self.regex == '':
                 raise ValidationError('Value Matches Regular Expression Rules require a regular expression')
-            if self.condition_rule != None or self.requirement != None:
+            if not (self.condition_rule == None or self.requirement == None):
                 raise ValidationError('Value Matches Regular Expression Rules do not use condition and requirement rules')
             if self.values != None:
                 raise ValidationError('Value Matches Regular Expression Rules do not use a list of valid values')
         if self.type == 'ConditionalRule':
-            if len(self.xpath_set.all()) != 0:
-                raise ValidationError('Conditional Rules do not use a single XPath. Currently has ' + str(len(self.xpath_set.all())))
             if self.regex != '':
                 raise ValidationError('Conditional Rules do no use regular expressions')
             if self.condition_rule == None or self.requirement == None:
@@ -91,7 +83,7 @@ class XPath(models.Model):
     rule = models.ForeignKey('Rule')
     
     def __unicode__(self):
-        return 'XPath.pk:' + str(self.pk)
+        return self.xpath
 
 class ValidValuesSet(models.Model):
     name = models.CharField(max_length=255)
@@ -100,7 +92,7 @@ class ValidValuesSet(models.Model):
         return self.name
     
     def values_list(self):
-        return self.validvalue_set.all().values('value')
+        return self.validvalue_set.all().values_list('value', flat=True)
         
 class ValidValue(models.Model):
     value = models.CharField(max_length=255)
