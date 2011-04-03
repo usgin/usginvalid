@@ -56,7 +56,10 @@ class RuleAdmin(admin.ModelAdmin):
     ]
     
     inlines = [XPathInline]
-    
-admin.site.register(RuleSet)
+
+class RuleSetAdmin(admin.ModelAdmin):
+    list_display = ('name', 'purpose')   
+     
+admin.site.register(RuleSet, RuleSetAdmin)
 admin.site.register(ValidValuesSet, ValidValueSetAdmin)
 admin.site.register(Rule, RuleAdmin)
