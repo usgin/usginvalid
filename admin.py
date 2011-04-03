@@ -64,7 +64,8 @@ class RuleAdmin(admin.ModelAdmin):
     inlines = [XPathInline]
 
 class RuleSetAdmin(admin.ModelAdmin):
-    list_display = ('name', 'purpose')   
+    list_display = ('name', 'purpose')
+    filter_vertical = ['rules']   
      
 admin.site.register(RuleSet, RuleSetAdmin)
 admin.site.register(ValidValuesSet, ValidValueSetAdmin)
