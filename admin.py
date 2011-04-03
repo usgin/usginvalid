@@ -41,6 +41,11 @@ class RuleAdminForm(forms.ModelForm):
         return self.cleaned_data
     
 class RuleAdmin(admin.ModelAdmin):
+    class Media:
+        css = {
+            "all": ("usginvalid/css/base-admin-adjustments.css",)
+        }
+        
     form = RuleAdminForm
     
     list_display = ('name', 'description', 'type')
@@ -64,8 +69,13 @@ class RuleAdmin(admin.ModelAdmin):
     inlines = [XPathInline]
 
 class RuleSetAdmin(admin.ModelAdmin):
+    class Media:
+        css = {
+            "all": ("usginvalid/css/base-admin-adjustments.css",)
+        }
+        
     list_display = ('name', 'purpose')
-    filter_vertical = ['rules']   
+    #filter_vertical = ['rules']   
      
 admin.site.register(RuleSet, RuleSetAdmin)
 admin.site.register(ValidValuesSet, ValidValueSetAdmin)
