@@ -18,6 +18,9 @@ RULE_TYPES = (
               ('ConditionalRule', 'Conditional: Execute One Rule if Another is Valid'))
     
 class Rule(models.Model):
+    class Meta:
+        ordering = ['name']
+        
     # Required Fields
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
@@ -86,6 +89,9 @@ class XPath(models.Model):
         return self.xpath
 
 class ValidValuesSet(models.Model):
+    class Meta:
+        ordering = ['name']
+        
     name = models.CharField(max_length=255)
     
     def __unicode__(self):
