@@ -27,6 +27,10 @@ class RuleAdminForm(forms.ModelForm):
             if re.match('^xpath_set-[0-9]+-xpath', index) != None:
                 if self.data[index] != '': xpath_count = xpath_count + 1
         
+        # Model has not been validated yet. Need to make sure that the Type has been specified
+        if self.cleaned_data['type'] == None:
+            raise ValidationError('Please specify the type of rule you wish to create')
+        
         if self.cleaned_data['type'] in ['ExistsRule', 'ValueInListRule', 'ContentMatchesExpressionRule'] and xpath_count != 1:
             raise ValidationError('Exactly one XPath is allowed')
         if self.cleaned_data['type'] in ['AnyOfRule', 'OneOfRule'] and xpath_count < 2:
