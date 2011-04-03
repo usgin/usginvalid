@@ -1,6 +1,7 @@
 import re
 from django.contrib import admin
 from django import forms
+from django.conf import settings
 from models import XPath, ValidValue, Rule, RuleSet, ValidValuesSet
 from django.core.exceptions import ValidationError
 
@@ -43,7 +44,7 @@ class RuleAdminForm(forms.ModelForm):
 class RuleAdmin(admin.ModelAdmin):
     class Media:
         css = {
-            "all": ("usginvalid/css/base-admin-adjustments.css",)
+            "all": ("/" + settings.MEDIA_URL + "usginvalid/css/base-admin-adjustments.css",)
         }
         
     form = RuleAdminForm
@@ -71,7 +72,7 @@ class RuleAdmin(admin.ModelAdmin):
 class RuleSetAdmin(admin.ModelAdmin):
     class Media:
         css = {
-            "all": ("usginvalid/css/base-admin-adjustments.css",)
+            "all": ("/" + settings.MEDIA_URL + "usginvalid/css/base-admin-adjustments.css",)
         }
         
     list_display = ('name', 'purpose')
