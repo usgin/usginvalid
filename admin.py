@@ -44,7 +44,7 @@ class RuleAdminForm(forms.ModelForm):
 class RuleAdmin(admin.ModelAdmin):
     class Media:
         css = {
-            "all": ("/" + settings.MEDIA_URL + "usginvalid/css/base-admin-adjustments.css",)
+            "all": (settings.MEDIA_URL + "usginvalid/css/base-admin-adjustments.css",)
         }
         
     form = RuleAdminForm
@@ -72,7 +72,7 @@ class RuleAdmin(admin.ModelAdmin):
 class RuleSetAdmin(admin.ModelAdmin):
     class Media:
         css = {
-            "all": ("/" + settings.MEDIA_URL + "usginvalid/css/base-admin-adjustments.css",)
+            "all": (settings.MEDIA_URL + "usginvalid/css/base-admin-adjustments.css",)
         }
         
     list_display = ('name', 'purpose')
