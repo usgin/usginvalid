@@ -22,7 +22,7 @@ class RuleAdminForm(forms.ModelForm):
         
     def clean(self):
         # Here is where I can catch XPath quantity issues, which depend on the type of 
-        #  Rule that is being created/updated
+        #  rule that is being created/updated
         xpath_count = 0
         for index in self.data:
             if re.match('^xpath_set-[0-9]+-xpath', index) != None:
@@ -76,7 +76,7 @@ class RuleSetAdmin(admin.ModelAdmin):
         }
         
     list_display = ('name', 'purpose')
-    #filter_vertical = ['rules']   
+    filter_horizontal = ['rules']   
      
 admin.site.register(RuleSet, RuleSetAdmin)
 admin.site.register(ValidValuesSet, ValidValueSetAdmin)
