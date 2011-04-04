@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 class RuleSet(models.Model):
     name = models.CharField(max_length=255)
     purpose = models.CharField(max_length=255)
-    rules = models.ManyToManyField('Rule')
+    rules = models.ManyToManyField('Rule', through='RuleToRuleSetLink')
     
     def __unicode__(self):
         return self.name
@@ -16,7 +16,27 @@ RULE_TYPES = (
               ('OneOfRule', 'Only One XPath From a Set Exists'),
               ('ContentMatchesExpressionRule', 'XPath Value Matches Regular Expression'),
               ('ConditionalRule', 'Conditional: Execute One Rule if Another is Valid'))
+
+class RuleToRuleSetLink(models.Model):
+    class Meta:
+        ordering = ['rule_name']
+        verbose_name = 'Rule'
+        
+    ruleset = models.ForeignKey('RuleSet')
+    rule = models.ForeignKey('Rule')
+    rule_description = models.CharField(max_length=255, blank=True)
+    rule_type = models.CharField(max_length=255, choices=RULE_TYPES, blank=True)
+    rule_name = models.CharField(max_length=255, blank=True)
     
+    def __unicode__(self):
+        return ''
+    
+    def clean(self):
+        # Duplicate the required Rule information for use on the inline form
+        self.rule_description = self.rule.description
+        self.rule_type = self.rule.type
+        self.rule_name = self.rule.name
+        
 class Rule(models.Model):
     class Meta:
         ordering = ['name']

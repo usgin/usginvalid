@@ -5,6 +5,12 @@ from django.conf import settings
 from models import XPath, ValidValue, Rule, RuleSet, ValidValuesSet
 from django.core.exceptions import ValidationError
 
+class RuleInline(admin.TabularInline):
+    model = RuleSet.rules.through
+    extra = 0
+    fields = ['rule', 'rule_description', 'rule_type']
+    readonly_fields = ['rule_description', 'rule_type']
+    
 class XPathInline(admin.TabularInline):
     model = XPath
     
@@ -74,9 +80,13 @@ class RuleSetAdmin(admin.ModelAdmin):
         css = {
             "all": (settings.MEDIA_URL + "usginvalid/css/base-admin-adjustments.css",)
         }
+        js = (settings.MEDIA_URL + "usginvalid/js/jquery-1.4.4.min.js",
+              settings.MEDIA_URL + "usginvalid/js/ruleset-list.js")
         
     list_display = ('name', 'purpose')
-    #filter_vertical = ['rules']   
+    #filter_vertical = ['rules'] 
+    exclude = ['rules']
+    inlines = [RuleInline]  
      
 admin.site.register(RuleSet, RuleSetAdmin)
 admin.site.register(ValidValuesSet, ValidValueSetAdmin)
