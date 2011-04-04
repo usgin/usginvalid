@@ -78,7 +78,8 @@ class RuleAdmin(admin.ModelAdmin):
 class RuleSetAdmin(admin.ModelAdmin):
     class Media:
         css = {
-            "all": (settings.MEDIA_URL + "usginvalid/css/base-admin-adjustments.css",)
+            "all": (settings.MEDIA_URL + "usginvalid/css/base-admin-adjustments.css",
+                    settings.MEDIA_URL + "usginvalid/css/ruleset-list.css")
         }
         js = (settings.MEDIA_URL + "usginvalid/js/jquery-1.4.4.min.js",
               settings.MEDIA_URL + "usginvalid/js/ruleset-list.js")
