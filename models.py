@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from xmlvalidator import *
 
 class RuleSet(models.Model):
     name = models.CharField(max_length=255)
@@ -8,7 +9,18 @@ class RuleSet(models.Model):
     
     def __unicode__(self):
         return self.name
-
+    
+    def rule_list(self):
+        result = list()
+        for rule in self.rules.all():
+            result.append(rule.rule())
+            
+        return result
+    
+    def validate(self, filepath):
+        result, report = record_is_valid(filepath, self.rule_list())
+        return result, report
+    
 RULE_TYPES = (
               ('ExistsRule', 'XPath Exists'),
               ('ValueInListRule', 'XPath Value is Valid'),
@@ -61,9 +73,26 @@ class Rule(models.Model):
     def __unicode__(self):
         return self.name
     
+    def xpath_list(self):
+        return self.xpath_set.all().values_list('xpath', flat=True)
+        
+    def rule(self):
+        if self.type == 'ExistsRule': 
+            return ExistsRule(self.name, self.description, self.xpath_list()[0])
+        if self.type == 'ValueInListRule':
+            return ValueInListRule(self.name, self.description, self.xpath_list()[0], self.values.values_list())
+        if self.type == 'AnyOfRule':
+            return AnyOfRule(self.name, self.description, self.xpath_list())
+        if self.type == 'OneOfRule':
+            return OneOfRule(self.name, self.description, self.xpath_list())
+        if self.type == 'ContentMatchesExpressionRule':
+            return ContentMatchesExpressionRule(self.name, self.description, self.xpath_list()[0], self.regex)
+        if self.type == 'ConditionalRule':
+            return ConditionalRule(self.name, self.description, [self.condition_rule.rule(), self.requirement_rule.rule()])
+            
     def clean(self):
         # Make sure that only appropriate fields are populated depending on the type of rule
-        # Model.clean does not yet have any information about xpath_set, so that validataion must
+        # Model.clean does not yet have any information about xpath_set, so that validation must
         #  be done through validation of the submitted form, not the rule itself. See RuleAdminForm in admin.py.
         if self.type == 'ExistsRule':
             if self.regex != '':
