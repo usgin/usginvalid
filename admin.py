@@ -2,7 +2,7 @@ import re
 from django.contrib import admin
 from django import forms
 from django.conf import settings
-from models import XPath, ValidValue, Rule, RuleSet, ValidValuesSet
+from models import XPath, ValidValue, Rule, RuleSet, ValidValuesSet, ValidationJob, ValidationReport, ValidationReportItem
 from django.core.exceptions import ValidationError
 
 class RuleInline(admin.TabularInline):
@@ -10,6 +10,12 @@ class RuleInline(admin.TabularInline):
     extra = 0
     fields = ['rule', 'rule_description', 'rule_type']
     readonly_fields = ['rule_description', 'rule_type']
+    
+class ValidationReportItemAdmin(admin.TabularInline):
+    model = ValidationReportItem
+    readonly_fields = ['item']
+    can_delete = False
+    max_num = 0
     
 class XPathInline(admin.TabularInline):
     model = XPath
@@ -88,7 +94,34 @@ class RuleSetAdmin(admin.ModelAdmin):
 
     exclude = ['rules']
     inlines = [RuleInline]
-     
+
+class ValidationJobAdmin(admin.ModelAdmin):
+    list_display = ['name', 'url', 'last_result', 'last_report_link']
+    
+    def save_model(self, request, obj, form, change):
+        obj.save()
+        
+        result, report = obj.ruleset.xml_validate(obj.url)
+        obj.last_result = result
+        obj.save()
+        
+        new_report = obj.validationreport_set.create()
+        new_report.save()
+        
+        for item in report:
+            new_item = new_report.validationreportitem_set.create(item=item)
+            new_item.save()
+            
+        if len(new_report.validationreportitem_set.all()) == 0:
+            new_item = new_report.validationreportitem_set.create(item='Passed Validation Without Errors')
+            new_item.save()
+    
+class ValidationReportAdmin(admin.ModelAdmin):
+    readonly_fields = ['job', 'run_date']
+    inlines = [ValidationReportItemAdmin]
+       
 admin.site.register(RuleSet, RuleSetAdmin)
 admin.site.register(ValidValuesSet, ValidValueSetAdmin)
 admin.site.register(Rule, RuleAdmin)
+admin.site.register(ValidationJob, ValidationJobAdmin)
+admin.site.register(ValidationReport, ValidationReportAdmin)

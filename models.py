@@ -1,6 +1,15 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from xmlvalidator import *
+import datetime
+
+RULE_TYPES = (
+              ('ExistsRule', 'XPath Exists'),
+              ('ValueInListRule', 'XPath Value is Valid'),
+              ('AnyOfRule', 'At Least One XPath From a Set Exists'),
+              ('OneOfRule', 'Only One XPath From a Set Exists'),
+              ('ContentMatchesExpressionRule', 'XPath Value Matches Regular Expression'),
+              ('ConditionalRule', 'Conditional: Execute One Rule if Another is Valid'))
 
 class RuleSet(models.Model):
     name = models.CharField(max_length=255)
@@ -17,17 +26,9 @@ class RuleSet(models.Model):
             
         return result
     
-    def validate(self, filepath):
+    def xml_validate(self, filepath):
         result, report = record_is_valid(filepath, self.rule_list())
         return result, report
-    
-RULE_TYPES = (
-              ('ExistsRule', 'XPath Exists'),
-              ('ValueInListRule', 'XPath Value is Valid'),
-              ('AnyOfRule', 'At Least One XPath From a Set Exists'),
-              ('OneOfRule', 'Only One XPath From a Set Exists'),
-              ('ContentMatchesExpressionRule', 'XPath Value Matches Regular Expression'),
-              ('ConditionalRule', 'Conditional: Execute One Rule if Another is Valid'))
 
 class RuleToRuleSetLink(models.Model):
     class Meta:
@@ -164,3 +165,51 @@ class ValidValue(models.Model):
     
     def __unicode__(self):
         return self.value
+
+class ValidationReportItem(models.Model):
+    item = models.CharField(max_length=255)
+    report = models.ForeignKey('ValidationReport', editable=False)
+    
+    def __unicode__(self):
+        return ''
+    
+class ValidationReport(models.Model):
+    class Meta:
+        ordering = ['run_date']
+        
+    run_date = models.DateTimeField(editable=False, default=datetime.datetime.now())
+    job = models.ForeignKey('ValidationJob', editable=False)
+    
+    def __unicode__(self):
+        return self.job.name + ' -on- ' + str(self.run_date)
+    
+class ValidationJob(models.Model):
+    class Meta:
+        ordering = ['name']
+        
+    name = models.CharField(max_length=255)
+    ruleset = models.ForeignKey('RuleSet')
+    url = models.URLField()
+    last_result = models.BooleanField(verbose_name='Valid', editable=False, default=False)
+    
+    def clean(self):
+        # Not the right place for this. Job item has not yet been saved and so can't make a report yet...
+        pass
+        
+    def __unicode__(self):
+        return self.name
+    
+    def last_report_link(self):
+        last_report = self.validationreport_set.all()
+        if len(last_report) == 0: 
+            return 'Never'
+        
+        last_report = last_report[0]
+        result = '<a href="/admin/usginvalid/validationreport/' + str(last_report.pk) + '/">' + str(last_report.run_date) + '</a>'
+        return result
+    last_report_link.allow_tags = True
+    
+        
+         
+        
+        
