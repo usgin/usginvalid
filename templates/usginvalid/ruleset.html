@@ -1,0 +1,146 @@
+{% load filters %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+	<head>
+	  	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	    <title>XML Validation Rules</title>
+	    <meta name="robots" content="NONE,NOARCHIVE" />
+	</head>
+	<body>
+	  	<div id="ruleset-container">
+	  		<div id="ruleset-name">
+	  			<h2>{{ ruleset.name }}</h2>
+			</div>
+			<div id="ruleset-purpose">
+				<p>{{ ruleset.purpose }}</p>
+			</div>
+		</div>
+		<div id="rules-container">
+			<ol>
+			{% for rule in rules %}
+				<li class="rule-container">				
+					<div class="rule-name"><strong>{{ rule.name }}</strong></div>
+					{% if rule.type == "ExistsRule" %}
+					<div class="rule-message">The document must have an element at the following XPath:</div>
+					<div class="xpath-set"><ul><li>{{ rule.xpath }}</li></ul></div>
+					{% endif %}
+					{% if rule.type == "ValueInListRule" %}
+					<div class="rule-message">The content at the following Xpath must exist in <a href="/admin/usginvalid/validvaluesset/{{ rule.values_pk }}/">this list.</a></div>
+					<div class="xpath-set"><ul><li>{{ rule.xpath }}</li></ul></div>
+					{% endif %}
+					{% if rule.type == "AnyOfRule" %}
+					<div class="rule-message">The document must have at least one of the following elements:</div>
+					<div class="xpath-set">
+						<ul>
+							{% for xpath in rule.xpaths %}
+							<li>{{ xpath }}</li>
+							{% endfor %}
+						</ul>
+					</div>
+					{% endif %}
+					{% if rule.type == "OneOfRule" %}
+					<div class="rule-message">The document must have exactly one of the following elements:</div>
+					<div class="xpath-set">
+						<ul>
+							{% for xpath in rule.xpaths %}
+							<li>{{ xpath }}</li>
+							{% endfor %}
+						</ul>
+					</div>
+					{% endif %}
+					{% if rule.type == "ContentMatchesExpressionRule" %}
+					<div class="rule-message">The content located at:</div>
+					<div class="xpath-set"><ul><li>{{ rule.xpath }}</li></ul></div>
+					<div class="rule-message">Must satisfy the regular expression:</div>
+					<div class="expression"><ul><li>{{ rule.expression }}</li></ul></div>
+					{% endif %}
+					{% if rule.type == "ConditionalRule" %}
+					<div class="rule-message">If the following condition is met:</div>
+					<ul>
+						<li class="rule-container">				
+							<div class="rule-name"><strong>{{ rule.condition.name }}</strong></div>
+							{% if rule.condition.type == "ExistsRule" %}
+							<div class="rule-message">The document must have an element at the following XPath:</div>
+							<div class="xpath-set"><ul><li>{{ rule.condition.xpath }}</li></ul></div>
+							{% endif %}
+							{% if rule.condition.type == "ValueInListRule" %}
+							<div class="rule-message">The content at the following Xpath must exist in <a href="/admin/usginvalid/validvaluesset/{{ rule.condition.values_pk }}/">this list.</a></div>
+							<div class="xpath-set"><ul><li>{{ rule.condition.xpath }}</li></ul></div>
+							{% endif %}
+							{% if rule.condition.type == "AnyOfRule" %}
+							<div class="rule-message">The document must have at least one of the following elements:</div>
+							<div class="xpath-set">
+								<ul>
+									{% for xpath in rule.condition.xpaths %}
+									<li>{{ xpath }}</li>
+									{% endfor %}
+								</ul>
+							</div>
+							{% endif %}
+							{% if rule.condition.type == "OneOfRule" %}
+							<div class="rule-message">The document must have exactly one of the following elements:</div>
+							<div class="xpath-set">
+								<ul>
+									{% for xpath in rule.condition.xpaths %}
+									<li>{{ xpath }}</li>
+									{% endfor %}
+								</ul>
+							</div>
+							{% endif %}
+							{% if rule.condition.type == "ContentMatchesExpressionRule" %}
+							<div class="rule-message">The content located at:</div>
+							<div class="xpath-set"><ul><li>{{ rule.condition.xpath }}</li></ul></div>
+							<div class="rule-message">Must satisfy the regular expression:</div>
+							<div class="expression"><ul><li>{{ rule.condition.expression }}</li></ul></div>
+							{% endif %}
+						</li>
+					</ul>
+					<div class="rule-message">Then the following condition must be satisfied:</div>
+					<ul>
+						<li class="rule-container">				
+							<div class="rule-name"><strong>{{ rule.requirement.name }}</strong></div>
+							{% if rule.requirement.type == "ExistsRule" %}
+							<div class="rule-message">The document must have an element at the following XPath:</div>
+							<div class="xpath-set"><ul><li>{{ rule.requirement.xpath }}</li></ul></div>
+							{% endif %}
+							{% if rule.requirement.type == "ValueInListRule" %}
+							<div class="rule-message">The content at the following Xpath must exist in <a href="/admin/usginvalid/validvaluesset/{{ rule.requirement.values_pk }}/">this list.</a></div>
+							<div class="xpath-set"><ul><li>{{ rule.requirement.xpath }}</li></ul></div>
+							{% endif %}
+							{% if rule.requirement.type == "AnyOfRule" %}
+							<div class="rule-message">The document must have at least one of the following elements:</div>
+							<div class="xpath-set">
+								<ul>
+									{% for xpath in rule.requirement.xpaths %}
+									<li>{{ xpath }}</li>
+									{% endfor %}
+								</ul>
+							</div>
+							{% endif %}
+							{% if rule.requirement.type == "OneOfRule" %}
+							<div class="rule-message">The document must have exactly one of the following elements:</div>
+							<div class="xpath-set">
+								<ul>
+									{% for xpath in rule.requirement.xpaths %}
+									<li>{{ xpath }}</li>
+									{% endfor %}
+								</ul>
+							</div>
+							{% endif %}
+							{% if rule.requirement.type == "ContentMatchesExpressionRule" %}
+							<div class="rule-message">The content located at:</div>
+							<div class="xpath-set"><ul><li>{{ rule.requirement.xpath }}</li></ul></div>
+							<div class="rule-message">Must satisfy the regular expression:</div>
+							<div class="expression"><ul><li>{{ rule.requirement.expression }}</li></ul></div>
+							{% endif %}
+						</li>
+					</ul>
+					{% endif %}
+				</li>
+			{% endfor %}
+			</ol>
+		</div>
+	</body>
+</html>
+	
+				
