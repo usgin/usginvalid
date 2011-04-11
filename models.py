@@ -191,10 +191,7 @@ class ValidationJob(models.Model):
     ruleset = models.ForeignKey('RuleSet')
     url = models.URLField()
     last_result = models.BooleanField(verbose_name='Valid', editable=False, default=False)
-    
-    def clean(self):
-        # Not the right place for this. Job item has not yet been saved and so can't make a report yet...
-        pass
+    set = models.ForeignKey('ValidationSet', blank=True, null=True)
         
     def __unicode__(self):
         return self.name
@@ -204,11 +201,32 @@ class ValidationJob(models.Model):
         if len(last_report) == 0: 
             return 'Never'
         
-        last_report = last_report[0]
+        last_report = last_report[len(last_report)-1]
         result = '<a href="/admin/usginvalid/validationreport/' + str(last_report.pk) + '/">' + str(last_report.run_date) + '</a>'
         return result
     last_report_link.allow_tags = True
+    last_report_link.short_description = 'Report'
     
+    def set_link(self):
+        if self.set is None:
+            return 'None'
+        
+        return '<a href="/admin/usginvalid/validationset/' + str(self.set.pk) + '/">' + str(self.set.name) + '</a>'
+    set_link.allow_tags = True
+    set_link.short_description = 'Validation Set'
+    
+class ValidationSet(models.Model):
+    class Meta:
+        ordering = ['name']
+        
+    name = models.CharField(max_length=255)
+    ruleset = models.ForeignKey('RuleSet')
+    url = models.URLField()
+    last_result = models.BooleanField(verbose_name='Valid', editable=False, default=False)
+    
+    def __unicode__(self):
+        return self.name
+        
         
          
         
