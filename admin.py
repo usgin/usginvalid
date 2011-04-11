@@ -109,6 +109,7 @@ class RuleSetAdmin(admin.ModelAdmin):
 class ValidationJobAdmin(admin.ModelAdmin):
     list_display = ['url', 'set_link', 'last_result', 'last_report_link']
     list_filter = ['set', 'last_result']
+    search_fields = ['url']
     
     def save_model(self, request, obj, form, change):
         obj.save()
