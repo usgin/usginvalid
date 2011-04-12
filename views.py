@@ -1,7 +1,7 @@
 from django.shortcuts import get_list_or_404, get_object_or_404, render_to_response
 from django.http import HttpResponse
 from django.core import serializers
-from models import Rule, RuleToRuleSetLink, RuleSet
+from models import Rule, RuleToRuleSetLink, RuleSet, ValidValuesSet, ValidValue
 
 def rule_view(request, pk):
     rule = get_list_or_404(Rule, pk=pk)
@@ -46,6 +46,9 @@ def ruleset_view(request, pk):
     for rule in ruleset.rules.all():
         rules.append(serialize_rule(rule))
     
-    #rules = [{'name': 'The name', 'type': 'The Type', 'xpath': 'The xpath'}]
-    
     return render_to_response('usginvalid/ruleset.html', {'ruleset': ruleset, 'rules': rules})
+
+def valueset_view(request, pk):
+    valueset = get_object_or_404(ValidValuesSet, pk=pk)
+    values = get_list_or_404(ValidValue, set=valueset)
+    return render_to_response('usginvalid/valueset.html', {'valueset': valueset, 'values': values})

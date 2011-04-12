@@ -25,7 +25,7 @@
 					<div class="xpath-set"><ul><li>{{ rule.xpath }}</li></ul></div>
 					{% endif %}
 					{% if rule.type == "ValueInListRule" %}
-					<div class="rule-message">The content at the following Xpath must exist in <a href="/admin/usginvalid/validvaluesset/{{ rule.values_pk }}/">this list.</a></div>
+					<div class="rule-message">The content at the following Xpath must exist in <a href="/validation/valueset/{{ rule.values_pk }}/">this list</a></div>
 					<div class="xpath-set"><ul><li>{{ rule.xpath }}</li></ul></div>
 					{% endif %}
 					{% if rule.type == "AnyOfRule" %}
@@ -64,7 +64,7 @@
 							<div class="xpath-set"><ul><li>{{ rule.condition.xpath }}</li></ul></div>
 							{% endif %}
 							{% if rule.condition.type == "ValueInListRule" %}
-							<div class="rule-message">The content at the following Xpath must exist in <a href="/admin/usginvalid/validvaluesset/{{ rule.condition.values_pk }}/">this list.</a></div>
+							<div class="rule-message">The content at the following Xpath must exist in <a href="/validation/valueset/{{ rule.condition.values_pk }}/">this list</a></div>
 							<div class="xpath-set"><ul><li>{{ rule.condition.xpath }}</li></ul></div>
 							{% endif %}
 							{% if rule.condition.type == "AnyOfRule" %}
@@ -104,7 +104,7 @@
 							<div class="xpath-set"><ul><li>{{ rule.requirement.xpath }}</li></ul></div>
 							{% endif %}
 							{% if rule.requirement.type == "ValueInListRule" %}
-							<div class="rule-message">The content at the following Xpath must exist in <a href="/admin/usginvalid/validvaluesset/{{ rule.requirement.values_pk }}/">this list.</a></div>
+							<div class="rule-message">The content at the following Xpath must exist in <a href="/validation/valueset/{{ rule.requirement.values_pk }}/">this list</a></div>
 							<div class="xpath-set"><ul><li>{{ rule.requirement.xpath }}</li></ul></div>
 							{% endif %}
 							{% if rule.requirement.type == "AnyOfRule" %}

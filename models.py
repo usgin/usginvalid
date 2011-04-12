@@ -161,6 +161,10 @@ class ValidValue(models.Model):
         ordering = ['value']
         
     value = models.CharField(max_length=255)
+    # Implement these when the time is right
+    #description = models.TextField(blank=True)
+    #uri = models.CharField(max_length=255, blank=True)
+    #source = models.CharField(max_length=255, blank=True)
     set = models.ForeignKey('ValidValuesSet')
     
     def __unicode__(self):
