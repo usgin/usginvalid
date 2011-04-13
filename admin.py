@@ -245,6 +245,7 @@ class ValidationSetAdmin(admin.ModelAdmin):
             existing = obj.validationjob_set.filter(name=file[0])
             if len(existing) > 0:
                 new_job = existing[0]
+                new_job.last_result = result
             else:    
                 new_job = obj.validationjob_set.create(name=file[0], ruleset=obj.ruleset, url=file[0], last_result=result)
             new_job.save()
