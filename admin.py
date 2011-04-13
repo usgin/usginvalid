@@ -55,7 +55,7 @@ class RuleAdminForm(forms.ModelForm):
         if self.cleaned_data['type'] == None:
             raise ValidationError('Please specify the type of rule you wish to create')
         
-        if self.cleaned_data['type'] in ['ExistsRule', 'ValueInListRule', 'ContentMatchesExpressionRule'] and xpath_count != 1:
+        if self.cleaned_data['type'] in ['ExistsRule', 'ValueInListRule', 'ContentMatchesExpressionRule', 'ValidUrlRule'] and xpath_count != 1:
             raise ValidationError('Exactly one XPath is allowed')
         if self.cleaned_data['type'] in ['AnyOfRule', 'OneOfRule'] and xpath_count < 2:
             raise ValidationError('Any of and One of Rules must have at least two XPaths.')
@@ -107,9 +107,9 @@ class RuleSetAdmin(admin.ModelAdmin):
     inlines = [RuleInline]
 
 class ValidationJobAdmin(admin.ModelAdmin):
-    list_display = ['url', 'set_link', 'last_result', 'last_report_link']
+    list_display = ['name', 'url', 'set_link', 'last_result', 'last_report_link']
     list_filter = ['set', 'last_result']
-    search_fields = ['url']
+    search_fields = ['url', 'name']
     
     def save_model(self, request, obj, form, change):
         obj.save()

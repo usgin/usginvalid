@@ -9,7 +9,8 @@ RULE_TYPES = (
               ('AnyOfRule', 'At Least One XPath From a Set Exists'),
               ('OneOfRule', 'Only One XPath From a Set Exists'),
               ('ContentMatchesExpressionRule', 'XPath Value Matches Regular Expression'),
-              ('ConditionalRule', 'Conditional: Execute One Rule if Another is Valid'))
+              ('ConditionalRule', 'Conditional: Execute One Rule if Another is Valid'),
+              ('ValidUrlRule', 'Check that a URL can be resolved.'))
 
 class RuleSet(models.Model):
     name = models.CharField(max_length=255)
@@ -90,18 +91,20 @@ class Rule(models.Model):
             return ContentMatchesExpressionRule(self.name, self.description, self.xpath_list()[0], self.regex)
         if self.type == 'ConditionalRule':
             return ConditionalRule(self.name, self.description, [self.condition_rule.rule(), self.requirement_rule.rule()])
+        if self.type == 'ValidUrlRule':
+            return ValidUrlRule(self.name, self.description, self.xpath_list()[0])
             
     def clean(self):
         # Make sure that only appropriate fields are populated depending on the type of rule
         # Model.clean does not yet have any information about xpath_set, so that validation must
         #  be done through validation of the submitted form, not the rule itself. See RuleAdminForm in admin.py.
-        if self.type == 'ExistsRule':
+        if self.type in ['ExistsRule', 'ValidUrlRule']:
             if self.regex != '':
-                raise ValidationError('Exists Rules do not use regular expressions')
+                raise ValidationError('Exists and Valid URL Rules do not use regular expressions')
             if not (self.condition_rule == None or self.requirement == None):
-                raise ValidationError('Exists Rules do not use condition and requirement rules')
+                raise ValidationError('Exists and Valid URL Rules do not use condition and requirement rules')
             if self.values != None:
-                raise ValidationError('Exists Rules do not use a list of valid values')
+                raise ValidationError('Exists and Valid URL Rules do not use a list of valid values')
         if self.type == 'ValueInListRule':
             if self.regex != '':
                 raise ValidationError('Value is Valid Rules do not use regular expressions')

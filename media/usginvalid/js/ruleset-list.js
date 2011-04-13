@@ -4,7 +4,8 @@ ruleTypes = {'ExistsRule': 'XPath Exists',
              'AnyOfRule': 'At Least One XPath From a Set Exists',
              'OneOfRule': 'Only One XPath From a Set Exists',
              'ContentMatchesExpressionRule': 'XPath Value Matches Regular Expression',
-             'ConditionalRule': 'Conditional: Execute One Rule if Another is Valid'};
+             'ConditionalRule': 'Conditional: Execute One Rule if Another is Valid',
+             'ValidUrlRule': 'Check that a URL can be resolved.'};
 
 function selectCheck() {
 	// Get all the select boxes on the page, apply a change event handler
