@@ -24,6 +24,10 @@
 					<div class="rule-message">The document must have an element at the following XPath:</div>
 					<div class="xpath-set"><ul><li>{{ rule.xpath }}</li></ul></div>
 					{% endif %}
+					{% if rule.type == "ValidUrlRule" %}
+					<div class="rule-message">Content at the following XPath must be a resolvable URL:</div>
+					<div class="xpath-set"><ul><li>{{ rule.xpath }}</li></ul></div>
+					{% endif %}
 					{% if rule.type == "ValueInListRule" %}
 					<div class="rule-message">The content at the following Xpath must exist in <a href="/validation/valueset/{{ rule.values_pk }}/">this list</a></div>
 					<div class="xpath-set"><ul><li>{{ rule.xpath }}</li></ul></div>

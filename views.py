@@ -9,7 +9,7 @@ def rule_view(request, pk):
     return HttpResponse(response, mimetype='application/json')
 
 def serialize_rule(rule):
-    if rule.type == 'ExistsRule':
+    if rule.type in ['ExistsRule', 'ValidUrlRule']:
         result = {'pk': rule.pk, 
                   'name': rule.name,
                   'type': rule.type,
