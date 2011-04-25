@@ -88,6 +88,14 @@
 									{% endfor %}
 								</ul>
 							</div>
+							{% if rule.condition.context %}
+							<div class="rule-message">At the following context:</div>
+							<div class="xpath-set">
+								<ul>
+									<li>{{ rule.condition.context }}</li>
+								</ul>
+							</div>
+							{% endif %}
 							{% endif %}
 							{% if rule.condition.type == "OneOfRule" %}
 							<div class="rule-message">The document must have exactly one of the following elements:</div>
@@ -128,6 +136,14 @@
 									{% endfor %}
 								</ul>
 							</div>
+							{% if rule.requirement.context %}
+							<div class="rule-message">At the following context:</div>
+							<div class="xpath-set">
+								<ul>
+									<li>{{ rule.requirement.context }}</li>
+								</ul>
+							</div>
+							{% endif %}
 							{% endif %}
 							{% if rule.requirement.type == "OneOfRule" %}
 							<div class="rule-message">The document must have exactly one of the following elements:</div>
