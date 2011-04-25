@@ -71,6 +71,8 @@ class Rule(models.Model):
     requirement_rule = models.ForeignKey('Rule', blank=True, null=True,
                                          help_text='Conditional Rules Only: This rule must be valid if the condition rule is valid.',
                                          related_name='requirement')
+    context = models.CharField(max_length=2000, blank=True,
+                               help_text='Any-Of Rules Only: Give a context under which the xpaths given below should be evaluated.')
     
     def __unicode__(self):
         return self.name
@@ -84,7 +86,11 @@ class Rule(models.Model):
         if self.type == 'ValueInListRule':
             return ValueInListRule(self.name, self.description, self.xpath_list()[0], self.values.values_list())
         if self.type == 'AnyOfRule':
-            return AnyOfRule(self.name, self.description, self.xpath_list())
+            if self.context == None:
+                context = '/'
+            else:
+                context = self.context
+            return AnyOfRule(self.name, self.description, self.xpath_list(), context)
         if self.type == 'OneOfRule':
             return OneOfRule(self.name, self.description, self.xpath_list())
         if self.type == 'ContentMatchesExpressionRule':
@@ -105,6 +111,8 @@ class Rule(models.Model):
                 raise ValidationError('Exists and Valid URL Rules do not use condition and requirement rules')
             if self.values != None:
                 raise ValidationError('Exists and Valid URL Rules do not use a list of valid values')
+            if self.context != None:
+                raise ValidationError('Exists and Valid URL Rules do not utilize XPath context. Use a specific XPath below.')
         if self.type == 'ValueInListRule':
             if self.regex != '':
                 raise ValidationError('Value is Valid Rules do not use regular expressions')
@@ -112,6 +120,8 @@ class Rule(models.Model):
                 raise ValidationError('Value is Valid Rules do not use condition and requirement rules')
             if self.values == None:
                 raise ValidationError('Value is Valid Rules require a list of valid values')
+            if self.context != None:
+                raise ValidationError('Value is Valid Rules do not utilize XPath context. Use a specific XPath below.')
         if self.type == 'AnyOfRule' or self.type == 'OneOfRule':
             if self.regex != '':
                 raise ValidationError('Any of and One of Rules do not use regular expressions')
@@ -126,6 +136,8 @@ class Rule(models.Model):
                 raise ValidationError('Value Matches Regular Expression Rules do not use condition and requirement rules')
             if self.values != None:
                 raise ValidationError('Value Matches Regular Expression Rules do not use a list of valid values')
+            if self.context != None:
+                raise ValidationError('Value Matches Regular Expression Rules do not utilize XPath context. Use a specific XPath below.')
         if self.type == 'ConditionalRule':
             if self.regex != '':
                 raise ValidationError('Conditional Rules do no use regular expressions')
@@ -133,6 +145,8 @@ class Rule(models.Model):
                 raise ValidationError('Conditional Rules require both a condition and a requirement rule')
             if self.values != None:
                 raise ValidationError('Conditional Rules do not use a list of valid values')
+            if self.context != None:
+                raise ValidationError('Conditional Rules do not utilize XPath context.')
             
 class XPath(models.Model):
     xpath = models.CharField(max_length=2000)

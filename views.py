@@ -25,7 +25,8 @@ def serialize_rule(rule):
         result = {'pk': rule.pk,
                   'name': rule.name, 
                   'type': rule.type, 
-                  'xpaths': rule.xpath_set.all()}
+                  'xpaths': rule.xpath_set.all(),
+                  'context': rule.context}
     if rule.type == 'ContentMatchesExpressionRule':
         result = {'pk': rule.pk,
                   'name': rule.name, 

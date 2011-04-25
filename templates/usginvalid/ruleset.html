@@ -41,6 +41,14 @@
 							{% endfor %}
 						</ul>
 					</div>
+					{% if rule.context %}
+					<div class="rule-message">At the following context:</div>
+					<div class="xpath-set">
+						<ul>
+							<li>{{ rule.context }}</li>
+						</ul>
+					</div>
+					{% endif %}
 					{% endif %}
 					{% if rule.type == "OneOfRule" %}
 					<div class="rule-message">The document must have exactly one of the following elements:</div>
