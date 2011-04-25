@@ -198,7 +198,7 @@ class ValidationReport(models.Model):
     class Meta:
         ordering = ['run_date']
         
-    run_date = models.DateTimeField(editable=False, default=datetime.datetime.now())
+    run_date = models.DateTimeField(editable=False, default=datetime.datetime.now)
     job = models.ForeignKey('ValidationJob', editable=False)
     
     def __unicode__(self):
