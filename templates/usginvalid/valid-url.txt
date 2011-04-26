@@ -1,0 +1,3 @@
+{{ name }} = ValidUrlRule(name='{{ rule.name }}',description='not given',xpath={{ rule.xpath }}){% if name == 'rule' %}
+ruleset.append({{ name }})
+{% endif %}

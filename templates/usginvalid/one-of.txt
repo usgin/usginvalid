@@ -1,0 +1,3 @@
+{{ name }} = OneOfRule(name='{{ rule.name }}',description='not given',xpaths={{ rule.xpaths|safe }}){% if name == 'rule' %}
+ruleset.append({{ name }})
+{% endif %}
