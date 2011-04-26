@@ -111,7 +111,7 @@ class Rule(models.Model):
                 raise ValidationError('Exists and Valid URL Rules do not use condition and requirement rules')
             if self.values != None:
                 raise ValidationError('Exists and Valid URL Rules do not use a list of valid values')
-            if self.context != None:
+            if self.context != '':
                 raise ValidationError('Exists and Valid URL Rules do not utilize XPath context. Use a specific XPath below.')
         if self.type == 'ValueInListRule':
             if self.regex != '':
@@ -120,7 +120,7 @@ class Rule(models.Model):
                 raise ValidationError('Value is Valid Rules do not use condition and requirement rules')
             if self.values == None:
                 raise ValidationError('Value is Valid Rules require a list of valid values')
-            if self.context != None:
+            if self.context != '':
                 raise ValidationError('Value is Valid Rules do not utilize XPath context. Use a specific XPath below.')
         if self.type == 'AnyOfRule' or self.type == 'OneOfRule':
             if self.regex != '':
@@ -136,7 +136,7 @@ class Rule(models.Model):
                 raise ValidationError('Value Matches Regular Expression Rules do not use condition and requirement rules')
             if self.values != None:
                 raise ValidationError('Value Matches Regular Expression Rules do not use a list of valid values')
-            if self.context != None:
+            if self.context != '':
                 raise ValidationError('Value Matches Regular Expression Rules do not utilize XPath context. Use a specific XPath below.')
         if self.type == 'ConditionalRule':
             if self.regex != '':
@@ -145,7 +145,7 @@ class Rule(models.Model):
                 raise ValidationError('Conditional Rules require both a condition and a requirement rule')
             if self.values != None:
                 raise ValidationError('Conditional Rules do not use a list of valid values')
-            if self.context != None:
+            if self.context != '':
                 raise ValidationError('Conditional Rules do not utilize XPath context.')
             
 class XPath(models.Model):
