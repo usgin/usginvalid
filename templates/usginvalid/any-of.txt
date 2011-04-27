@@ -1,3 +1,3 @@
-{{ name }} = AnyOfRule(name='{{ rule.name }}',description='not given',xpaths={{ rule.xpaths|safe }},context='{{ rule.context }}'){% if name == 'rule' %}
-ruleset.append({{ name }})
-{% endif %}
+		{{ name }} = AnyOfRule(name='{{ rule.name }}',description='not given',xpaths={{ rule.xpaths|safe }},context='{{ rule.context }}'){% if name == 'rule' %}
+		self.append({{ name }})
+		{% endif %}

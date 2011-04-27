@@ -62,7 +62,11 @@ def ruleset_view(request, pk, format=None):
                  'OneOfRule': 'usginvalid/one-of.txt',
                  'ContentMatchesExpressionRule': 'usginvalid/regex.txt',
                  'ConditionalRule': 'usginvalid/condition.txt'}
-        result = 'ruleset = list()\n'
+        result = 'from xmlvalidator import ExistsRule, ValidUrlRule, ValueInListRule, ConditionalRule, ContentMatchesExpressionRule, AnyOfRule\n\n'
+        result += 'class UsginMinRules(list):\n'
+        result += '\tdef __init__(self):\n'
+        result += '\t\tlist.__init__(self)\n\n'
+        
         for rule in rules:
             rule = clean_xpaths_list(rule)
             if rule['type'] == 'ConditionalRule':
